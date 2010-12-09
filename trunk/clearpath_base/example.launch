@@ -1,0 +1,36 @@
+<launch>
+  <group ns="clearpath/robots/default">  
+    <node pkg="joy" type="joy_node" name="joy_node" output="screen">
+      <param name="dev" value="/dev/input/js0" />
+    </node>
+    <node pkg="clearpath_base" type="teleop.py" name="clearpath_teleop" output="screen">
+      <param name="turn_scale" value="1.2" />
+      <param name="drive_scale" value="0.5" />
+    </node>
+
+    <!-- For open-loop control, use raw.py instead of kinematic.py. -->
+    <node pkg="clearpath_base" type="kinematic.py" name="clearpath_base" output="screen">
+      <!-- Uncomment the following line to manually specify serial device, rather
+	   than autodetecting between available /dev/ttyUSB devices.
+	  -->
+	  <param name="port" value="/home/iain/client" /> 
+
+      <!-- Horizon Data Subscriptions
+	    The examples shown are available on all platforms. Depending on
+		your platform's equipment, the following may also be available:
+		- velocity (commanded)
+		- differential_speed (commanded)
+		- differential_output (actual)
+		- ackermann_output (actual)
+		- platform_orientation
+		- platform_rotation
+		- encoders
+		- raw_encoders
+		- distance (for rangefinders)
+	  -->
+      <param name="data/system_status" value="10" />
+      <param name="data/safety_status" value="10" />
+      <param name="data/power_status" value="1" />
+    </node>
+  </group>
+</launch>
