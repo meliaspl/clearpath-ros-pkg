@@ -13,7 +13,7 @@
       <!-- Uncomment the following line to manually specify serial device, rather
 	   than autodetecting between available /dev/ttyUSB devices.
 	  -->
-	  <param name="port" value="/home/iain/client" /> 
+	  <!-- <param name="port" value="/dev/ttyUSB0" /> -->
 
       <!-- Horizon Data Subscriptions
 	    The examples shown are available on all platforms. Depending on
@@ -25,7 +25,6 @@
 		- platform_orientation
 		- platform_rotation
 		- encoders
-		- raw_encoders
 		- distance (for rangefinders)
 	  -->
       <param name="data/system_status" value="10" />
