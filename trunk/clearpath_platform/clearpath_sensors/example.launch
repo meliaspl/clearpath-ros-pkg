@@ -1,0 +1,8 @@
+<launch>
+  <group ns="clearpath/robots/default">  
+    <node pkg="clearpath_sensors" type="cmps09.py" name="cmps09" output="screen">
+      <param name="port" value="/dev/ttyUSB0" />
+      <param name="hz" value="10" />
+    </node>
+  </group>
+</launch>
