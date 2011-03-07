@@ -5,8 +5,9 @@
 import roslib; roslib.load_manifest('clearpath_base')
 import rospy
 
-from clearpath_base.msg import Announce, ClearpathRobot
+from clearpath_base.msg import ClearpathRobot
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 
 # Required Clearpath Modules
 from clearpath.horizon import Horizon 
@@ -57,10 +58,12 @@ class Clearpath:
 
 
         rospy.on_shutdown(self.shutdown_handler)
-        announce_pub = rospy.Publisher('/clearpath/announce', Announce, latch=True)
-        announce_pub.publish(action="new_robot", topic=rospy.get_namespace());
+        announce_pub = rospy.Publisher('/clearpath/announce/robots', String, latch=True)
+        announce_pub.publish(rospy.get_namespace());
 
         # Fetch robot information so we can publish it (useful for logs, etc.)
+        #self.horizon.reset()
+        #rospy.sleep(0.5)
         platform_name = self.horizon.request_platform_name(subscription=0)
         platform_info = self.horizon.request_platform_info(subscription=0)
         firmware_info = self.horizon.request_firmware_info(subscription=0)
@@ -81,7 +84,7 @@ class Clearpath:
                 self.cmd_vel(data.linear.x, data.angular.z)
                 self.tx = False
                 self.comm_error = False
-            except utils.TransportError as ex:
+            except IOError as ex:
                 if not self.comm_error:
                     rospy.logerr('Problem communicating with platform: %s', ex)
                     self.comm_error = True

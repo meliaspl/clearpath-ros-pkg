@@ -53,7 +53,7 @@ import logging                  # Logging Utilities
 
 # Module Support
 __version__  = "1.0"
-__revision__ = "$Revision: 742 $"
+__revision__ = "$Revision: 783 $"
 
 
 ## Message Log
@@ -69,8 +69,7 @@ logger.debug("Loading clearpath.horizon.messages ...")
 #
 #  Represents a message to be transmitted to / received from the hardware.
 #
-class Message(check.Fields, check.metatuple('code - 0x%X', 'payload - %s',
-                                            'no_ack - %s', 'timestamp msec')):
+class Message(check.Fields, check.namedtuple('Message_', 'code payload no_ack timestamp')):
     """Horizon Protocol Message"""
     
     # Horizon Message Constants
@@ -129,6 +128,15 @@ class Message(check.Fields, check.metatuple('code - 0x%X', 'payload - %s',
     def __init__(self, **kwargs):
         # Assignment to fields occurs in namedtuple's __new__
         self.validate()
+
+
+    def __str__(self):
+        lines = []
+        lines.append("Code: 0x%X" % self.code)
+        lines.append("No Ack: %s" % bool(self.no_ack))
+        lines.append("Timestamp: %d" % self.timestamp)
+        lines.append("Payload:\n  %s" % (str(self.payload).replace("\n", "\n  ")))
+        return "\n".join(lines)
 
 
     def copy(self, timestamp = None):

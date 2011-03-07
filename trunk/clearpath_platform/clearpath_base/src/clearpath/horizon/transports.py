@@ -201,7 +201,7 @@ MessageRecord = collections.namedtuple('MessageRecord', 'message, expiry')
 __version__  = "1.0"
 """Module Version"""
 ## SVN Code Revision
-__revision__ = "$Revision: 686 $"
+__revision__ = "$Revision: 800 $"
 """ SVN Code Revision"""
 
 
@@ -319,10 +319,11 @@ class Serial(Transport):
             self._opened = True
             self.receiver = self.Receiver(self._serial, self.store_timeout, self.receive_callback)
             self.receiver.start()
-
+            time.sleep(0.1)
+ 
             logger.debug("%s: Sending ping request." % (self.__class__.__name__))
             message = messages.Message.request('echo') 
-            try:
+            try: 
                 self.send_message(message)
             except utils.TransportError as ex:
                 # Must catch this for the sake of closing the serial port and also
@@ -336,6 +337,7 @@ class Serial(Transport):
                 time.sleep(0.1)
                 waiting = self.receiver.get_waiting()
                 for message in waiting:
+                    logger.debug("%s: Message received." % (self.__class__.__name__))
                     if codes.names[message.code] == 'echo':
                         # Success
                         logger.debug("%s: Transport opened." % self.__class__.__name__)
@@ -363,6 +365,7 @@ class Serial(Transport):
     def send_message(self, message):
         """Serial Transport Device Send Horizon Message"""
         # Send Message
+        # print " ".join(map(hex, message.data()))
         self.send_raw(utils.to_bytes(message.data()))
 
 
@@ -525,7 +528,7 @@ class Serial(Transport):
 
         def _get_message(self):
             read = 0
-        
+
             # read as much as possible without blocking (as timeout = 0)
             chars = self._serial.read(1000)
 

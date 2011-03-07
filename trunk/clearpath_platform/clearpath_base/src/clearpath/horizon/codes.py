@@ -49,7 +49,7 @@ from collections import namedtuple
 
 
 __version__  = "1.0"
-__revision__ = "$Revision: 687 $"
+__revision__ = "$Revision: 765 $"
 
 VERSION_BYTE = 0x00
 
@@ -81,6 +81,8 @@ extend({
     'differential_control': Code( 0x0201, 0x4201, 0x8201, payloads.DifferentialControl ),
     'differential_output': Code( 0x0202, 0x4202, 0x8202, payloads.DifferentialOutput ),
     'ackermann_output': Code( 0x0203, 0x4203, 0x8203, payloads.AckermannOutput ),
+    'differential_current': Code( 0x0220, 0x4220, 0x8220, payloads.DifferentialCurrent ),
+    'differential_current_control': Code( 0x0221, 0x4221, 0x8221, payloads.DifferentialCurrentControl ),
     'velocity':      Code( 0x0204, 0x4204, 0x8204, payloads.Velocity ),
     'turn':          Code( 0x0205, 0x4205, 0x8205, payloads.Turn ),
     'max_speed':     Code( 0x0210, 0x4210, 0x8210, payloads.MaxSpeed ),
