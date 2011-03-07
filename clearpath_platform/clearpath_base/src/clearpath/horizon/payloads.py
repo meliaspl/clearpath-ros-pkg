@@ -161,7 +161,7 @@ import math                     # Math Constants and Functions
 __version__  = "1.0"
 """Module Version"""
 ## SVN Code Revision
-__revision__ = "$Revision: 743 $"
+__revision__ = "$Revision: 765 $"
 """ SVN Code Revision"""
 
 
@@ -1542,6 +1542,11 @@ class DifferentialControl(Payload):
             self.right_p, self.right_i, self.right_d, self.right_ffwd, self.right_stic, self.right_sat)
    
 
+class DifferentialCurrentControl(DifferentialControl):
+    pass
+
+
+
 ## Horizon Message Payload - Differential Output
 #
 #  Represents the payload of the command and data messages 'differential motors'
@@ -1633,6 +1638,8 @@ class DifferentialOutput(Payload):
         return "Left Motor: %f%%\nRight Motor: %f%%" % (self.left, self.right)
 
 
+class DifferentialCurrent(DifferentialOutput):
+    pass
 
 ## Horizon Message Payload - Ackermann Output
 #

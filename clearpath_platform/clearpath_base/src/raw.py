@@ -16,7 +16,7 @@ class Raw(Clearpath):
         Clearpath.__init__(self)
 
         if self.horizon:
-            self.linear_scale = rospy.get_param('~linear_scale', 1.2)
+            self.linear_scale = rospy.get_param('~linear_scale', 1.0)
             self.angular_scale = rospy.get_param('~angular_scale', 2)
             rospy.loginfo("Using %f m/s as 100%% output (linear scale)", self.linear_scale)
             rospy.loginfo("Using %f rad/s as +/- 100%% (angular scale)", self.angular_scale)

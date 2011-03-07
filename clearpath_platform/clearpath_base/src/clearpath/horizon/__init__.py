@@ -111,7 +111,7 @@ import time                     # System Date & Time
 import inspect                  # For parameter comprehension in command decorators
 
 __version__  = "1.0"
-__revision__ = "$Revision: 698 $"
+__revision__ = "$Revision: 801 $"
 
 logger = logging.getLogger('clearpath.horizon')
 """Horizon Module Log"""
@@ -157,8 +157,8 @@ class Horizon(object):
     #
     #  @pydoc
     def __init__(self, transport = protocol.transports.Serial.autodetect, 
-                 transport_args = {}, retries = 5, send_timeout = 200,
-                 rec_timeout = 200, store_timeout = 2000):
+                 transport_args = {}, retries = 5, send_timeout = 50,
+                 rec_timeout = 100, store_timeout = 2000):
         
         self._protocol = None        
         self._protocol = protocol.Client(transport, transport_args, retries,
@@ -216,11 +216,20 @@ class Horizon(object):
                                left_accel = 0.0, right_accel = 0.0):
         self._protocol.command('differential_speed', locals())
 
+    def set_differential_current(self, left = 0.0, right = 0.0):
+        self._protocol.command('differential_current', locals())
+
     def set_differential_control(self, left_p = 0.0, left_i = 0.0, left_d = 0.0, 
                           left_ffwd = 0.0, left_stic = 0.0, left_sat = 0.0, 
                           right_p = 0.0, right_i = 0.0, right_d = 0.0, right_ffwd = 0.0, 
                           right_stic = 0.0, right_sat = 0.0):
         self._protocol.command('differential_control', locals())
+
+    def set_differential_current_control(self, left_p = 0.0, left_i = 0.0, left_d = 0.0, 
+                          left_ffwd = 0.0, left_stic = 0.0, left_sat = 0.0, 
+                          right_p = 0.0, right_i = 0.0, right_d = 0.0, right_ffwd = 0.0, 
+                          right_stic = 0.0, right_sat = 0.0):
+        self._protocol.command('differential_current_control', locals())
     
     def set_differential_output(self, left = 0.0, right = 0.0):
         self._protocol.command('differential_output', locals())
@@ -353,7 +362,7 @@ class Horizon(object):
         return self._protocol.request('processor_status', locals())
 
     def request_power_status(self, subscription = 0):
-        return self._protocol.request('power_status', locals())
+        return self._protocol.request('power_status', locals()) 
 
     def request_safety_status(self, subscription = 0):
         return self._protocol.request('safety_status', locals())
@@ -363,6 +372,12 @@ class Horizon(object):
 
     def request_differential_control(self, subscription = 0):
         return self._protocol.request('differential_control', locals())
+
+    def request_differential_current(self, subscription = 0):
+        return self._protocol.request('differential_current', locals())
+
+    def request_differential_current_control(self, subscription = 0):
+        return self._protocol.request('differential_current_control', locals())
 
     def request_differential_output(self, subscription = 0):
         return self._protocol.request('differential_output', locals())
@@ -379,7 +394,7 @@ class Horizon(object):
     def request_max_speed(self, subscription = 0):
         return self._protocol.request('max_speed', locals())
         
-    def request_max_acceleration(self, subscription = 0):
+    def request_max_accel(self, subscription = 0):
         return self._protocol.request('max_accel', locals())
         
     def request_gear_status(self, subscription = 0):

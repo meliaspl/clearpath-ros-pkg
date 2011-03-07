@@ -11,9 +11,8 @@
 #    \_____/    \___/|___||___||_| |_||_| \_\|_|   |_| |_|  |_|  |_| |_|
 #            ROBOTICS™
 #
-#  File: demo.py
+#  File: cli.py
 #  Desc: Horizon Interface Demo Python Module & Script
-#  Auth: Malcolm Robert
 #  
 #  Copyright © 2010 Clearpath Robotics, Inc. 
 #  All Rights Reserved
@@ -62,8 +61,8 @@ if __name__ == "__main__":
     except:
         
         # Notify of proper run method
-        print ("ERROR: clearpath.horizon.cli is a module and must be run "\
-               "by:\n  python -m clearpath.horizon.cli")
+        print ("ERROR: clearpath.cli is a module and must be run "\
+               "by:\n  python -m clearpath.cli")
 
         # Exit Error
         import sys
@@ -208,7 +207,7 @@ except ImportError:
 __version__  = "1.0"
 """Module Version"""
 ## SVN Code Revision
-__revision__ = "$Revision: 730 $"
+__revision__ = "$Revision: 800 $"
 """SVN Code Revision"""
 
 

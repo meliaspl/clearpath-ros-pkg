@@ -1,55 +1,8 @@
 
-import collections
+from collections import namedtuple
 
-FieldMeta = collections.namedtuple('FieldMeta', 'units format title')
-
-# Wrapper for namedtuple which adds on extra field metadata
-# in a cls.fields dict.
-def metatuple(*fieldstrs):
-    fieldmetas = {}
-    fieldnames = []
-    for fieldmeta in map(lambda s: s.split(' ', 4), fieldstrs):
-        if len(fieldmeta) == 1: fieldmeta.append('')  # Default units
-        if fieldmeta[1] == '-': fieldmeta[1] = ''
-        if len(fieldmeta) == 2: fieldmeta.append("%.2f")  # Default format
-        if len(fieldmeta) == 3: 
-            # Default title based on field name.
-            fieldmeta.append(fieldmeta[0].replace('_', ' ').title())
-        fieldnames.append(fieldmeta[0])
-        fieldmetas[fieldmeta[0]] = FieldMeta(*fieldmeta[1:])
-        
-    tuplename = "p%d_" % abs(hash(tuple(fieldnames)))
-    # print fieldnames
-    nt = collections.namedtuple(tuplename, fieldnames)
-    nt.fields = fieldmetas
-    return nt
-    
 
 class Fields(object):
-
-    def __str__(self):
-        lines = []
-        for field in self._fields:
-            meta = self.fields[field]
-            value = getattr(self, field)
-            #if isinstance(value, Fields):
-                # Special case for the Payload members of Message.
-            #    value = str(value)
-
-            one = lambda value: "%s %s" % (meta.format, meta.units) % value
-            if isinstance(value, list):
-                if len(value) > 0:
-                    valuestr = ', '.join(map(one, value))
-                else:
-                    valuestr = '<none>'
-            else:
-                valuestr = one(value)
-
-            line = "%s: %s" % (meta.title, valuestr)
-            lines.append(line)
-
-        return "\n".join(lines)
-
     def __repr__(self):
         '''Get the namedtuple's repr, and replace the name with the current classname.
         This permits payloads to inherit from intermediary abstract payloads.'''
@@ -95,7 +48,7 @@ class Fields(object):
                 # Confirm each of these is a list, then break it down and populate the sub-Check 
                 # object with the names and values of the individual items.
                 self._check(lambda x: not isinstance(x, list), "Not a list")
-                subnames += map(lambda (index, subvalue): "%s[%s]" % (name, repr(index)), enumerate(value))
+                subnames += map(lambda index, subvalue: "%s[%s]" % (name, repr(index)), enumerate(value))
                 subvalues += value
             return self.__class__(self.subjname, subnames, subvalues)
 

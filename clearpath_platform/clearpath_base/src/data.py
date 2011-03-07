@@ -15,6 +15,7 @@ msgs = {
     'velocity': VelocitySetpt,
     'platform_orientation': Orientation,
     'platform_rotation': RotateRate,
+    'platform_magnetometer': Magnetometer,
     'encoders': Encoders,
     'raw_encoders': RawEncoders,
     'distance': Distance
@@ -96,6 +97,11 @@ def pkg_platform_orientation(payload):
 def pkg_platform_rotation(payload):
     msg = RotateRate()
     copy_attributes(payload, msg, ['roll', 'pitch', 'yaw'])
+    return msg
+
+def pkg_platform_magnetometer(payload):
+    msg = Magnetometer()
+    copy_attributes(payload, msg, ['x', 'y', 'z'])
     return msg
 
 def pkg_encoders(payload):
