@@ -176,7 +176,7 @@ import math
 
 # Module Support
 __version__  = "1.0"
-__revision__ = "$Revision: 686 $"
+__revision__ = "$Revision: 916 $"
 
 
 ## Message Log
@@ -237,6 +237,8 @@ class Client(object):
         self._retries = retries
         self._send_timeout = send_timeout
         self._rec_timeout = rec_timeout
+        
+        self.acks = True;
  
         # Create Transport
         transport_args['receive_callback'] = self.do_handlers
@@ -281,7 +283,7 @@ class Client(object):
 
     def command(self, name, args):
         if 'self' in args: del args['self']
-        self.send_message(messages.Message.command(name, args, self.timestamp()))
+        self.send_message(messages.Message.command(name, args, self.timestamp(), no_ack=(not self.acks)))
 
 
     def request(self, name, args):
@@ -294,28 +296,30 @@ class Client(object):
         message = messages.Message.request(name, args, self.timestamp())
         self.send_message(message)
 
-        
-        # Wait for the first response, to return it, unless this is a subscription
-        # cancelation. If the first response never comes, rerun the request command.
-        if args['subscription'] != 0xFFFF:
-            retries = self._retries
-            start = self.timestamp()
-            while True:
-                if self.timestamp() - start > self._rec_timeout:
-                    if retries > 0:
-                        message = message.copy(timestamp=self.timestamp())
-                        self.send_message(message)
-                        retries -= 1           
-                        start = self.timestamp()
-                    else:
-                        raise utils.TimeoutError (
-                            "Timeout Occurred waiting for response!")
+        # If this is explicitly a subscription-cancelation request,
+        # then exit now...
+        if 'subscription' in args and args['subscription'] == 0xFFFF:
+            return;
 
-                if self._received != None:
-                    self.remove_handler(handler = self._receiver, request = name)
-                    return self._received[1]
+        # Otherwise... wait on a first reply to return.
+        retries = self._retries
+        start = self.timestamp()
+        while True:
+            if self.timestamp() - start > self._rec_timeout:
+                if retries > 0:
+                    message = message.copy(timestamp=self.timestamp())
+                    self.send_message(message)
+                    retries -= 1           
+                    start = self.timestamp()
+                else:
+                    raise utils.TimeoutError (
+                        "Timeout Occurred waiting for response!")
 
-                time.sleep(0.001)
+            if self._received != None:
+                self.remove_handler(handler = self._receiver, request = name)
+                return self._received[1]
+
+            time.sleep(0.001)
 
 
     def _receiver(self, name, payload, timestamp):
@@ -370,7 +374,7 @@ class Client(object):
         """Horizon Protocol Add Data Message Handler"""
         code = 0
         if request != None:
-            code = codes.codes[request].data
+            code = codes.codes[request].data()
 
         with self._handlers_lock:
             # Add Handler

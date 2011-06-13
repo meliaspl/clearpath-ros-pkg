@@ -24,4 +24,6 @@
       <param name="data/differential_speed" value="10" />
     </node>
   </group>
+
+  <node pkg="rosbag" type="record" name="record" output="screen" args="-a -o $(env HOME)/roslog"/> 
 </launch>

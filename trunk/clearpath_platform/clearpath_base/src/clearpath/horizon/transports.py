@@ -201,7 +201,7 @@ MessageRecord = collections.namedtuple('MessageRecord', 'message, expiry')
 __version__  = "1.0"
 """Module Version"""
 ## SVN Code Revision
-__revision__ = "$Revision: 800 $"
+__revision__ = "$Revision: 898 $"
 """ SVN Code Revision"""
 
 
@@ -262,7 +262,8 @@ class Serial(Transport):
         self._opened = False
         self.store_timeout = store_timeout
         self.receive_callback = receive_callback
-    
+        self.serial_write_lock = threading.Lock()
+
         # Initialization
         try:
             self._serial = serial.Serial()
@@ -364,8 +365,6 @@ class Serial(Transport):
 
     def send_message(self, message):
         """Serial Transport Device Send Horizon Message"""
-        # Send Message
-        # print " ".join(map(hex, message.data()))
         self.send_raw(utils.to_bytes(message.data()))
 
 
@@ -374,21 +373,22 @@ class Serial(Transport):
             raise utils.TransportError ("Cannot send while closed!")
 
         try:
-            try:
-                getattr(serial, "serial_for_url")
-                sent = self._serial.write(raw)
-                if sent == None:
-                    raise utils.TransportError ("Write Failed!")
+            with self.serial_write_lock:
+                try:
+                    getattr(serial, "serial_for_url")
+                    sent = self._serial.write(raw)
+                    if sent == None:
+                        raise utils.TransportError ("Write Failed!")
 
-            except AttributeError:
-                if sys.version_info[0] > 2:
-                    self._serial.write(list(map(chr, raw)))
-                else:
-                    self._serial.write(raw)
-                sent = len(raw)
+                except AttributeError:
+                    if sys.version_info[0] > 2:
+                        self._serial.write(list(map(chr, raw)))
+                    else:
+                        self._serial.write(raw)
+                    sent = len(raw)
  
-            if sent < len(raw):
-                raise utils.TransportError ("Write Incomplete!")
+                if sent < len(raw):
+                    raise utils.TransportError ("Write Incomplete!")
                 
         # Send Failed
         except serial.SerialException as ex:

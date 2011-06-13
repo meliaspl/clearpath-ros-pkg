@@ -111,7 +111,7 @@ import time                     # System Date & Time
 import inspect                  # For parameter comprehension in command decorators
 
 __version__  = "1.0"
-__revision__ = "$Revision: 801 $"
+__revision__ = "$Revision: 916 $"
 
 logger = logging.getLogger('clearpath.horizon')
 """Horizon Module Log"""
@@ -181,7 +181,13 @@ class Horizon(object):
     def close(self):
         if self._protocol != None and self._protocol.is_open():
             self._protocol.close()
-                
+
+
+    def acks(self, enabled):
+        if enabled:
+            self._protocol.acks = True
+        else:
+            self._protocol.acks = False
                 
     #-------------------------------- Safeties ---------------------------------
                     
@@ -212,6 +218,9 @@ class Horizon(object):
     def set_safety_status(self, flags = 0x0000):
         self._protocol.command('safety_status', locals())
         
+    def set_config(self, index=0, value=0.0):
+        self._protocol.command('config', locals())
+
     def set_differential_speed(self, left_speed = 0.0, right_speed = 0.0,
                                left_accel = 0.0, right_accel = 0.0):
         self._protocol.command('differential_speed', locals())
@@ -366,6 +375,9 @@ class Horizon(object):
 
     def request_safety_status(self, subscription = 0):
         return self._protocol.request('safety_status', locals())
+
+    def request_config(self, index=0):
+        return self._protocol.request('config', locals())
 
     def request_differential_speed(self, subscription = 0):
         return self._protocol.request('differential_speed', locals())
