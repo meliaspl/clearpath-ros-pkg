@@ -53,7 +53,7 @@ import logging                  # Logging Utilities
 
 # Module Support
 __version__  = "1.0"
-__revision__ = "$Revision: 783 $"
+__revision__ = "$Revision: 916 $"
 
 
 ## Message Log
@@ -77,15 +77,15 @@ class Message(check.Fields, check.namedtuple('Message_', 'code payload no_ack ti
     STX = 0x55
  
     @classmethod
-    def command(cls, name, args={}, timestamp=0):
+    def command(cls, name, args={}, timestamp=0, no_ack=False):
         code = codes.codes[name]
-        return cls(code=code.set, payload=code.payload(**args), 
-                   no_ack=False, timestamp=timestamp)
+        return cls(code=code.set(), payload=code.data_payload(**args), 
+                   no_ack=no_ack, timestamp=timestamp)
 
     @classmethod
     def request(cls, name, args={}, timestamp=0):
         code = codes.codes[name]
-        return cls(code=code.request, payload=codes.payloads.Request(**args), 
+        return cls(code=code.request(), payload=code.request_payload(**args), 
                    no_ack=False, timestamp=timestamp)
 
     @classmethod
@@ -116,7 +116,7 @@ class Message(check.Fields, check.namedtuple('Message_', 'code payload no_ack ti
  
         # If a message's stated type is a command or a request, but it's being received,
         # then its payload is actually of type acknowledgment.
-        payload_cls = codes.codes[codes.names[code]].payload
+        payload_cls = codes.codes[codes.names[code]].data_payload
         if code < 0x8000:
             payload_cls = codes.payloads.Ack
 

@@ -5,7 +5,7 @@
     </node>
     <node pkg="clearpath_teleop" type="teleop.py" name="clearpath_teleop" output="screen">
       <param name="turn_scale" value="1.2" />
-      <param name="drive_scale" value="0.5" />
+      <param name="drive_scale" value="1.5" />
       <param name="deadman_button" value="1" />
     </node>
   </group>

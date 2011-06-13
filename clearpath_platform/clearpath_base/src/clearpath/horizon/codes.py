@@ -49,11 +49,33 @@ from collections import namedtuple
 
 
 __version__  = "1.0"
-__revision__ = "$Revision: 765 $"
+__revision__ = "$Revision: 916 $"
 
 VERSION_BYTE = 0x00
 
-Code = namedtuple('Code', 'set request data payload')
+SET = 0x01
+REQUEST = 0x02
+
+class Code:
+    def __init__(self, base_code, capability, data_payload_cls, request_payload_cls=None):
+        self.base_code = base_code
+        self.capability = capability
+        self.data_payload = data_payload_cls
+        if request_payload_cls:
+            # Has own request class
+            self.request_payload = request_payload_cls
+        else:
+            # Use fallback subscribe request
+            self.request_payload = payloads.Subscribe
+
+    def set(self):
+        if self.capability & SET: return self.base_code
+
+    def request(self):
+        if self.capability & REQUEST: return self.base_code + 0x4000
+
+    def data(self):
+        if self.capability & REQUEST: return self.base_code + 0x8000
 
 codes = {}
 names = {}
@@ -62,73 +84,140 @@ def extend(new_codes):
     global codes, names
     codes.update(new_codes)
     for name, code in new_codes.items():
-        if code.set: names[code.set] = name
-        if code.request: names[code.request] = name
-        if code.data: names[code.data] = name
+        if code.set(): names[code.set()] = name
+        if code.request(): names[code.request()] = name
+        if code.data(): names[code.data()] = name
 
 
 extend({
-    'echo':          Code( None, 0x4000, 0x8000, payloads.Echo ),
-    'platform_info': Code( 0x0001, 0x4001, 0x8001, payloads.PlatformInfo ),
-    'platform_name': Code( 0x0002, 0x4002, 0x8002, payloads.PlatformName ),
-    'firmware_info': Code( None, 0x4003, 0x8003, payloads.FirmwareInfo ),
-    'system_status': Code( None, 0x4004, 0x8004, payloads.SystemStatus ),
-    'platform_time': Code( 0x0005, None, None, payloads.PlatformTime ),
-    'power_status':  Code( None, 0x4005, 0x8005, payloads.PowerStatus ),
-    'processor_status': Code( None, 0x4006, 0x8006, payloads.ProcessorStatus ),
-    'safety_status': Code( 0x0010, 0x4010, 0x8010, payloads.SafetyStatus ),
-    'differential_speed': Code( 0x0200, 0x4200, 0x8200, payloads.DifferentialSpeed ),
-    'differential_control': Code( 0x0201, 0x4201, 0x8201, payloads.DifferentialControl ),
-    'differential_output': Code( 0x0202, 0x4202, 0x8202, payloads.DifferentialOutput ),
-    'ackermann_output': Code( 0x0203, 0x4203, 0x8203, payloads.AckermannOutput ),
-    'differential_current': Code( 0x0220, 0x4220, 0x8220, payloads.DifferentialCurrent ),
-    'differential_current_control': Code( 0x0221, 0x4221, 0x8221, payloads.DifferentialCurrentControl ),
-    'velocity':      Code( 0x0204, 0x4204, 0x8204, payloads.Velocity ),
-    'turn':          Code( 0x0205, 0x4205, 0x8205, payloads.Turn ),
-    'max_speed':     Code( 0x0210, 0x4210, 0x8210, payloads.MaxSpeed ),
-    'max_accel': Code( 0x0211, 0x4211, 0x8211, payloads.MaxAccel ),
-    'gear_status':   Code( 0x0212, 0x4212, 0x8212, payloads.GearStatus ),
-    'gpadc_output':  Code( 0x0300, 0x4300, 0x8300, payloads.GPADCOutput ),
-    'gpio':          Code( 0x0301, 0x4301, 0x8301, payloads.GPIO ),
-    'gpio_output':   Code( 0x0302, None, None, payloads.GPIOOutput ),
-    'gpadc_input':   Code( None, 0x4303, 0x8303, payloads.GPADCInput ),
-    'pan_tilt_zoom': Code( 0x0400, 0x4400, 0x8400, payloads.PanTiltZoom ),
-    'distance':      Code( None, 0x4500, 0x8500, payloads.Distance ),
-    'distance_timing': Code( None, 0x4501, 0x8501, payloads.DistanceTiming ),
-    'platform_orientation': Code( None, 0x4600, 0x8600, payloads.Orientation ),
-    'platform_rotation': Code( None, 0x4601, 0x8601, payloads.Rotation ),
-    'platform_acceleration': Code( None, 0x4602, 0x8602, payloads.Acceleration ),
-    'platform_6axis': Code( None, 0x4603, 0x8603, payloads.Platform6Axis ),
-    'platform_6axis_orientation': Code( None, 0x4604, 0x8604, payloads.Platform6AxisOrientation ),
-    'platform_magnetometer': Code( None, 0x4606, 0x8606, payloads.Magnetometer ),
-    'encoders':      Code( None, 0x4800, 0x8800, payloads.Encoders ),
-    'raw_encoders':  Code( None, 0x4801, 0x8801, payloads.RawEncoders ),
-    'encoders_config': Code( 0x0802, 0x4802, 0x8802, payloads.EncodersConfig ),
-    'absolute_joint_position': Code( 0x1010, 0x5010, 0x9010, payloads.AbsoluteJointPosition ),
-    'relative_joint_position': Code( 0x1011, 0x5011, 0x9011, payloads.RelativeJointPosition ),
-    'joint_control': Code( 0x1012, 0x5012, 0x9012, payloads.JointControl ),
-    'joint_homing_status': Code( 0x1013, 0x5013, 0x9013, payloads.JointHomingStatus ),
-    'joint_torques': Code( None, 0x5014, 0x9014, payloads.JointTorques ),
-    'end_effector_position': Code( 0x1020, 0x5020, 0x9020, payloads.EndEffectorPosition ),
-    'end_effector_pose': Code( 0x1021, 0x5021, 0x9021, payloads.EndEffectorPose ),
-    'end_effector_orientation': Code( None, 0x5022, 0x9022, payloads.EndEffectorOrientation ),
-    'reset':         Code( 0x2000, None, None, payloads.Reset ),
-    'restore_system_config': Code( 0x2001, None, None, payloads.RestoreSystemConfig ),
-    'store_system_config': Code( 0x2002, None, None, payloads.StoreSystemConfig ),
-    'current_sensor_config': Code( 0x2100, 0x6100, 0xA100, payloads.CurrentSensorConfig ),
-    'voltage_sensor_config': Code( 0x2101, 0x6101, 0xA101, payloads.VoltageSensorConfig ),
-    'temperature_sensor_config': Code( 0x2102, 0x6102, 0xA102, payloads.TemperatureSensorConfig ),
-    'orientation_sensor_config': Code( 0x2103, 0x6103, 0xA103, payloads.OrientationSensorConfig ),
-    'gyro_config':   Code( 0x2104, 0x6104, 0xA104, payloads.GyroConfig ),
-    'accelerometer_config': Code( 0x2105, 0x6105, 0xA105, payloads.AccelerometerConfig ),
-    'magnetometer_config': Code( 0x2106, 0x6106, 0xA106, payloads.MagnetometerConfig ),
-    'battery_estimation_config': Code( 0x2107, 0x6107, 0xA107, payloads.BatteryEstimationConfig ),
-    'platform_kinematics': Code( 0x2108, 0x6108, 0xA108, payloads.PlatformKinematics ),
-    'raw_current_sensor': Code( None, 0x6110, 0xA110, payloads.RawCurrentSensor ),
-    'raw_voltage_sensor': Code( None, 0x6111, 0xA111, payloads.RawVoltageSensor ),
-    'raw_temperature_sensor': Code( None, 0x6112, 0xA112, payloads.RawTemperatureSensor ),
-    'raw_orientation_sensor': Code( None, 0x6113, 0xA113, payloads.RawOrientationSensor ),
-    'raw_gyro':      Code( None, 0x6114, 0xA114, payloads.RawGyro ),
-    'raw_accelerometer': Code( None, 0x6115, 0xA115, payloads.RawAccelerometer ),
-    'raw_magnetometer': Code( None, 0x6116, 0xA116, payloads.RawMagnetometer ),
-    'control_flags': Code( 0x2130, 0x6130, 0xA130, payloads.ControlFlags ) })
+    'echo':
+        Code( 0x0000, REQUEST, payloads.Echo ),
+    'platform_info':
+        Code( 0x0001, SET | REQUEST, payloads.PlatformInfo ),
+    'platform_name':
+        Code( 0x0002, SET | REQUEST, payloads.PlatformName ),
+    'firmware_info':
+        Code( 0x0003, REQUEST, payloads.FirmwareInfo ),
+    'system_status':
+        Code( 0x0004, REQUEST, payloads.SystemStatus ),
+#    'platform_time':
+#        Code( 0x0005, SET, payloads.PlatformTime ),
+    'power_status':
+         Code( 0x0005, REQUEST, payloads.PowerStatus ),
+    'processor_status':
+        Code( 0x0006, REQUEST, payloads.ProcessorStatus ),
+    'safety_status':
+        Code( 0x0010, REQUEST, payloads.SafetyStatus ),
+    'config':
+        Code( 0x0100, SET | REQUEST, payloads.Config, payloads.ConfigRequest ),
+    'differential_speed':
+        Code( 0x0200, SET | REQUEST, payloads.DifferentialSpeed ),
+    'differential_control':
+        Code( 0x0201, SET | REQUEST, payloads.DifferentialControl ),
+    'differential_output':
+        Code( 0x0202, SET | REQUEST, payloads.DifferentialOutput ),
+    'ackermann_output':
+        Code( 0x0203, SET | REQUEST, payloads.AckermannOutput ),
+    'differential_current':
+        Code( 0x0220, SET | REQUEST, payloads.DifferentialCurrent ),
+    'differential_current_control':
+        Code( 0x0221, SET | REQUEST, payloads.DifferentialCurrentControl ),
+    'velocity':
+        Code( 0x0204, SET | REQUEST, payloads.Velocity ),
+    'turn':
+        Code( 0x0205, SET | REQUEST, payloads.Turn ),
+    'max_speed':
+        Code( 0x0210, SET | REQUEST, payloads.MaxSpeed ),
+    'max_accel':
+        Code( 0x0211, SET | REQUEST, payloads.MaxAccel ),
+    'gear_status':
+        Code( 0x0212, SET | REQUEST, payloads.GearStatus ),
+#    'gpadc_output':
+#        Code( 0x0300, SET | REQUEST, payloads.GPADCOutput ),
+#    'gpio':
+#        Code( 0x0301, SET | REQUEST, payloads.GPIO ),
+#    'gpio_output':
+#        Code( 0x0302, SET, payloads.GPIOOutput ),
+#    'gpadc_input':
+#        Code( 0x0303, REQUEST, payloads.GPADCInput ),
+#    'pan_tilt_zoom':
+#        Code( 0x0400, SET | REQUEST, payloads.PanTiltZoom ),
+    'distance':
+        Code( 0x0500, REQUEST, payloads.Distance ),
+    'distance_timing':
+        Code( 0x0501, REQUEST, payloads.DistanceTiming ),
+    'platform_orientation':
+        Code( 0x0600, REQUEST , payloads.Orientation ),
+    'platform_rotation':
+        Code( 0x0601, REQUEST, payloads.Rotation ),
+    'platform_acceleration':
+        Code( 0x0602, REQUEST, payloads.Acceleration ),
+#    'platform_6axis':
+#       Code( None, 0x4603, 0x8603, payloads.Platform6Axis ),
+#    'platform_6axis_orientation':
+#       Code( None, 0x4604, 0x8604, payloads.Platform6AxisOrientation ),
+    'platform_magnetometer':
+        Code( 0x0606, REQUEST, payloads.Magnetometer ),
+    'encoders':
+        Code( 0x0800, REQUEST, payloads.Encoders ),
+    'raw_encoders':
+        Code( 0x0801, REQUEST, payloads.RawEncoders ),
+    'encoders_config':
+        Code( 0x0802, SET | REQUEST, payloads.EncodersConfig ),
+#    'absolute_joint_position':
+#        Code( 0x1010, 0x5010, 0x9010, payloads.AbsoluteJointPosition ),
+#    'relative_joint_position':
+#        Code( 0x1011, 0x5011, 0x9011, payloads.RelativeJointPosition ),
+#    'joint_control':
+#        Code( 0x1012, 0x5012, 0x9012, payloads.JointControl ),
+#    'joint_homing_status':
+#        Code( 0x1013, 0x5013, 0x9013, payloads.JointHomingStatus ),
+#    'joint_torques':
+#        Code( None, 0x5014, 0x9014, payloads.JointTorques ),
+#    'end_effector_position':
+#        Code( 0x1020, 0x5020, 0x9020, payloads.EndEffectorPosition ),
+#    'end_effector_pose':
+#        Code( 0x1021, 0x5021, 0x9021, payloads.EndEffectorPose ),
+#    'end_effector_orientation':
+#        Code( None, 0x5022, 0x9022, payloads.EndEffectorOrientation ),
+    'reset':
+        Code( 0x2000, SET, payloads.Reset ),
+    'restore_system_config':
+        Code( 0x2001, SET, payloads.RestoreSystemConfig ),
+    'store_system_config':
+        Code( 0x2002, SET, payloads.StoreSystemConfig ),
+    'current_sensor_config':
+        Code( 0x2100, SET | REQUEST, payloads.CurrentSensorConfig ),
+    'voltage_sensor_config':
+        Code( 0x2101, SET | REQUEST, payloads.VoltageSensorConfig ),
+    'temperature_sensor_config':
+        Code( 0x2102, SET | REQUEST, payloads.TemperatureSensorConfig ),
+    'orientation_sensor_config':
+        Code( 0x2103, SET | REQUEST, payloads.OrientationSensorConfig ),
+    'gyro_config':
+        Code( 0x2104, SET | REQUEST, payloads.GyroConfig ),
+    'accelerometer_config':
+        Code( 0x2105, SET | REQUEST, payloads.AccelerometerConfig ),
+    'magnetometer_config':
+        Code( 0x2106, SET | REQUEST, payloads.MagnetometerConfig ),
+    'battery_estimation_config':
+        Code( 0x2107, SET | REQUEST, payloads.BatteryEstimationConfig ),
+    'platform_kinematics':
+        Code( 0x2108, SET | REQUEST, payloads.PlatformKinematics ),
+    'raw_current_sensor':
+        Code( 0x2110, REQUEST, payloads.RawCurrentSensor ),
+    'raw_voltage_sensor':
+        Code( 0x2111, REQUEST, payloads.RawVoltageSensor ),
+    'raw_temperature_sensor':
+        Code( 0x2112, REQUEST, payloads.RawTemperatureSensor ),
+    'raw_orientation_sensor':
+        Code( 0x2113, REQUEST, payloads.RawOrientationSensor ),
+    'raw_gyro':
+        Code( 0x2114, REQUEST, payloads.RawGyro ),
+    'raw_accelerometer':
+        Code( 0x2115, REQUEST, payloads.RawAccelerometer ),
+    'raw_magnetometer':
+        Code( 0x2116, REQUEST, payloads.RawMagnetometer ),
+    'control_flags':
+        Code( 0x2130, SET | REQUEST, payloads.ControlFlags )
+})

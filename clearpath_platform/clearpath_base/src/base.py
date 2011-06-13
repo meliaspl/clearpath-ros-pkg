@@ -7,7 +7,7 @@ import rospy
 
 from clearpath_base.msg import ClearpathRobot
 from geometry_msgs.msg import Twist
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 
 # Required Clearpath Modules
 from clearpath.horizon import Horizon 
@@ -76,18 +76,26 @@ class Clearpath:
         self.do_subscriptions()
         self.comm_error = False
 
+        self.last_cmd = rospy.Time.now()
+        self.freq_pub = rospy.Publisher('cmd_freq', Float32, latch=True)
+        self.horizon.acks(False);
+
     # ROS calls this when receiving velocity commands. We impose a rate limit
     # on passing them down to the platform.
     def cmd_vel_handler(self, data):
         if self.tx:
             try:
                 self.cmd_vel(data.linear.x, data.angular.z)
+                self.freq_pub.publish((rospy.Time.now() - self.last_cmd).to_sec())
+                self.last_cmd = rospy.Time.now()
                 self.tx = False
                 self.comm_error = False
             except IOError as ex:
                 if not self.comm_error:
                     rospy.logerr('Problem communicating with platform: %s', ex)
                     self.comm_error = True
+            except ValueError as ex:
+                rospy.logerr('Platform said Bad Values: %f %f', data.linear.x, data.angular.z)
 
     # ROS calls this when spinning down.
     def shutdown_handler(self):
@@ -117,7 +125,6 @@ class Clearpath:
         if hasattr(self, 'publishers'): return
 
         self.publishers = {}
-        self.horizon.add_handler(self._receive)
         for topic, frequency in rospy.get_param('~data', {}).items():
             self.publishers[topic] = rospy.Publisher('data/' + topic, 
                                                      data.msgs[topic],
@@ -125,6 +132,7 @@ class Clearpath:
             subscribe_func = getattr(self.horizon, 'request_' + topic)
             subscribe_func(frequency)
             rospy.loginfo("Successfully returning data: request_%s", topic)
+        self.horizon.add_handler(self._receive)
 
 
     def _receive(self, name, payload, timestamp):
