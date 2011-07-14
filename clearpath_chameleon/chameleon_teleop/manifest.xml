@@ -1,0 +1,14 @@
+<package>
+  <description brief="chameleon_teleop">
+
+     chameleon_teleop
+
+  </description>
+  <author>Mike Purvis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/chameleon_teleop</url>
+
+</package>
+
+

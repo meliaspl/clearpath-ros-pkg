@@ -1,0 +1,13 @@
+port: /dev/ttyACM0
+#port: ../home/mpurvis/client1
+name : Chameleon
+publish:
+ sense:
+  type: chameleon_msgs/ChameleonSense
+subscribe:
+ cmd_pwm:
+  type: chameleon_msgs/ChameleonCmdPWM
+ cmd_speed:
+  type: chameleon_msgs/ChameleonCmdSpeed
+ cmd_vel:
+  type: geometry_msgs/Twist
