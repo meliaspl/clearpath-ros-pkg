@@ -1,0 +1,45 @@
+#ifndef HARDWARE_H
+#define HARDWARE_H
+
+#define PIN_ENCA_LEFT 4
+#define PIN_ENCB_LEFT 5
+#define PIN_DIR_LEFT 6
+#define PIN_DIR_RIGHT 7
+#define PIN_PWM_LEFT 9
+#define PIN_PWM_RIGHT 10
+#define PIN_ENCA_RIGHT 11
+#define PIN_ENCB_RIGHT 12
+
+#define PIN_HEARTBEAT 13
+
+#define PIN_VSENSE 0
+#define VSENSE_SCALE 0.01512
+#define VSENSE_OFFSET 0.0
+
+#define BATT_THRESH_LOW 12.1
+#define BATT_THRESH_MED 12.7
+#define BATT_THRESH_HIGH 13.2
+#define BATT_THRESH_FULL 13.6
+
+
+#define HEARTBEAT_DRIVING_PERIOD_MS 500
+#define HEARTBEAT_TIMEOUT_PERIOD_MS 100
+#define SENSE_PERIOD_MS 100
+#define CONTROL_PERIOD_MS 20
+#define CMD_TIMEOUT_MS 500
+#define CONTROL_HZ (1000 / CONTROL_PERIOD_MS)
+
+#define MAX_SPEED 0.5  // m/s
+#define MAX_ACCEL 10.0  // m/s^2
+#define MOTOR_SLEW 0.1  // Full range in 10 control periods.
+#define TRACK 0.26
+
+#define TICKS_PER_METER 26700
+#define METERS_PER_TICK (1.0/TICKS_PER_METER)
+
+#define IOX_ADDR 0b1110000
+#define IOX_CONFIG_ADDR 0x3
+#define IOX_CONFIG_DATA 0x0
+#define IOX_OUTPUT_ADDR 0x1
+
+#endif

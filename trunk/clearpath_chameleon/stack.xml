@@ -1,0 +1,15 @@
+<stack>
+  <description brief="clearpath mobile platforms chameleon">
+
+     This stack includes packages for use with the Clearpath Robotics Chameleon R200.
+
+  </description>
+  <author>Mike Purvis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://clearpathrobotics.com</url>
+
+  <depend stack="ros"/>
+</stack>
+
+

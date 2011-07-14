@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="avr_bridge" type="bridge_node.py" name="chameleon_bridge" args="$(find chameleon_firmware)/config.yaml" />
+</launch>
