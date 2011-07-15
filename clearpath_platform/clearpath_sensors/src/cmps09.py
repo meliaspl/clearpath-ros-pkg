@@ -6,41 +6,53 @@ import rospy
 from geometry_msgs.msg import Pose2D
 
 # Standard
-import serial
+import serial, time
+
+FIRST_TIMEOUT_SECS = 3.0
+TIMEOUT_SECS = 0.3
+RETRY_OPEN_SECS = 1.0
 
 class CMPS09(object):
     def __init__(self):
         rospy.init_node('cmps09')
        
         # Opens up serial port 
-        self.port = rospy.get_param('~port', '')
-        self.hz = rospy.get_param('~hz', 20)
-        self.timeout = rospy.get_param('~timeout', 0.2)
+        self.port = rospy.get_param('~port', '/dev/usb-compass')
+        self.hz = rospy.get_param('~hz', 10)
+	self.serial = None
 
         if self.port != '':
-            rospy.loginfo("CMPS09 using port %s.",self.port)
+            rospy.loginfo("Compass using port %s.",self.port)
         else:
-            rospy.logerr("No port specified for CMPS09!")
+            rospy.logerr("No port specified for compass!")
             exit(1)
 
-        try:
-            self.transport = serial.Serial(port=self.port, baudrate=9600, timeout=self.timeout)
-            self.transport.open()
-        except serial.serialutil.SerialException as e:
-            rospy.logerr("CMPS09: %s" % e)
-            exit(1)
-        
-        # Registers shutdown handler to close the serial port we just opened.
-        rospy.on_shutdown(self.shutdown_handler)
-        
-        # Registers as publisher
+        self.start_serial()
         self.pub = rospy.Publisher('compass', Pose2D)
-    
-    # Shutdown     
-    def shutdown_handler(self):
-        self.transport.close()
-        rospy.loginfo("CMPS09 shutdown.")
-    
+
+    def start_serial(self):
+        if self.serial:
+            self.serial.close()
+            self.serial = None
+
+        error = None
+        while True:
+            try:
+                self.serial = serial.Serial(self.port, 9600, timeout=0.2)
+                self.timeout = time.clock() + FIRST_TIMEOUT_SECS
+                rospy.loginfo("Opened compass on port: %s" % self.port)
+                break;
+            except serial.SerialException as e:
+                if not error:
+                    error = e
+                    rospy.logerr("Error opening compass on %s: %s" % (self.port, error))
+                    rospy.logerr("Will retry opening compass every second.")
+                time.sleep(RETRY_OPEN_SECS)
+
+	    if rospy.is_shutdown():
+	        exit(1)
+
+
     # Main loop
     def run(self):
         rate = rospy.Rate(self.hz)
@@ -48,26 +60,25 @@ class CMPS09(object):
 
         while not rospy.is_shutdown():
             try:
-                self.transport.write('\x13')
-                raw = self.transport.read(2)
+                self.serial.write('\x13')
+                raw = self.serial.read(2)
             except OSError as e:
-                rospy.logerr("CMPS09: %s" % e)
-                exit(1)
+                rospy.logerr("Compass serial error: %s" % e) 
+                rospy.loginfo("Reopening compass serial port.")
+                self.start_serial()
+                continue
 
             if len(raw) < 2:
                 # Error state
                 consecutive_errors += 1
-                if consecutive_errors == 3:
-                    rospy.logerr("CMPS09 receiving no data. Will try again every second.")
-                elif consecutive_errors > 3:
-                    rospy.sleep(1.0)
+                if consecutive_errors >= 3:
+                    rospy.logerr("CMPS09 received no data for 3 consecutive requests.")
+                    time.sleep(RETRY_OPEN_SECS)
+                    rospy.loginfo("Reopening compass serial port.")
+                    self.start_serial()
                 continue
                     
             # Success state
-            if consecutive_errors >= 3:
-                # If we'd previously logged the error message, log that 
-                # things are okay again.
-                rospy.loginfo("CMPS09 receiving data successfully.")
             consecutive_errors = 0
             
             data = (ord(raw[0]) << 8) | ord(raw[1])
