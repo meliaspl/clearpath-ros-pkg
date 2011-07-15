@@ -46,6 +46,7 @@ class GPS:
     def run(self):
         buffer = "";
         while not rospy.is_shutdown():
+            time.sleep(0.001)
             raw = self.serial.read(255)
             if len(raw) > 0:
                 self.timeout = time.clock() + TIMEOUT_SECS
@@ -66,8 +67,8 @@ class GPS:
             fix_msg = GPSFix()
             fix_msg.latitude = self._lat(fields)
             fix_msg.longitude = self._lon(fields)
-            fix_msg.track = float(fields[8])
-            fix_msg.speed = float(fields[7]) * METERS_PER_SEC_PER_KNOT
+            if fields[8]: fix_msg.track = float(fields[8])
+            if fields[7]: fix_msg.speed = float(fields[7]) * METERS_PER_SEC_PER_KNOT
             self.pub.publish(fix_msg)
 
 
