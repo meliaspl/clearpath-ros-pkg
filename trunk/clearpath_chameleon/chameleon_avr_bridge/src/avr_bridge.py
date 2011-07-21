@@ -39,7 +39,7 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-import roslib; roslib.load_manifest('avr_bridge')
+import roslib; roslib.load_manifest('chameleon_avr_bridge')
 import rospy
 import serial 
 import struct
