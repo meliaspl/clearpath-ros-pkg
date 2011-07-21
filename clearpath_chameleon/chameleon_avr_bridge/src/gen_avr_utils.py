@@ -41,7 +41,7 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
 ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import roslib; roslib.load_manifest('avr_bridge')
+import roslib; roslib.load_manifest('chameleon_avr_bridge')
 
 import sys
 import shutil
@@ -458,7 +458,7 @@ class CGenerator():
 		""" generate the ros implementation for the avr code
 		"""
 		genPath = roslib.packages.find_resource(
-				'avr_bridge' ,'gen_avr.py')[0]
+				'chameleon_avr_bridge' ,'gen_avr.py')[0]
 		avrRosPath =  genPath[:-len('gen_avr.py')]+ 'avr_ros'
 		inst_path = folder_path + '/avr_ros'
 

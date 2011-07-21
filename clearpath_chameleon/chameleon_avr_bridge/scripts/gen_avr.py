@@ -45,7 +45,7 @@ This software was written with support of a research grant (R01ES014717)
 """
 
 
-import roslib; roslib.load_manifest('avr_bridge')
+import roslib; roslib.load_manifest('chameleon_avr_bridge')
 
 import sys
 import shutil

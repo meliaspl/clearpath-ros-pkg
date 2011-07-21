@@ -8,8 +8,8 @@ set(AVR_BRIDGE_CONFIG config.yaml)
 set(ARDUINO_TYPE "arduino_uno")
 set(ADUINO_PORT "/dev/ttyACM0")
 
-rosbuild_find_ros_package(avr_bridge)
-include(${avr_bridge_PACKAGE_PATH}/arduino_cmake/avrbuild.cmake)
+rosbuild_find_ros_package(chameleon_avr_bridge)
+include(${chameleon_avr_bridge_PACKAGE_PATH}/arduino_cmake/avrbuild.cmake)
 
 add_subdirectory(src/Wire)
 
