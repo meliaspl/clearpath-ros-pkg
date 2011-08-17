@@ -1,0 +1,14 @@
+<package>
+  <description brief="turtlebot_kinect">
+
+     turtlebot_kinect
+
+  </description>
+  <author>The Beast</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/turtlebot_kinect</url>
+
+</package>
+
+

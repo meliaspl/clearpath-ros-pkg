@@ -1,0 +1,18 @@
+<package>
+  <description brief="turtle_train">
+
+     turtle_train
+
+  </description>
+  <author>Sean Anderson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/turtle_train</url>
+
+  <depend package="clearpath_tools" />
+  <depend package="clearpath_kinect_demo" />
+  <depend package="turtlebot_node" />
+
+</package>
+
+

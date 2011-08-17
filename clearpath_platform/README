@@ -1,0 +1,20 @@
+Where did the packages go?
+--------------------------
+
+When we reorganized our source code, it turned out that we didn't 
+need the clearpath_platform stack anymore. We've moved the
+clearpath_base and clearpath_teleop packages to a new stack
+called clearpath_common, and we've put launchers and demos specific
+to our platforms in clearpath_husky, clearpath_kingfisher, and
+clearpath_turtlebot. Those stacks are the best starting point
+for getting going with our platforms.
+
+If you were previously using packages from clearpath_platform, it
+should be a seamless transition to clearpath_common. Just check the
+new stacks out to a location in your ROS_PACKAGE_PATH, and
+roslaunch will find them as before.
+
+Please let us know if you have any questions!
+
+code@clearpathrobotics.com
+

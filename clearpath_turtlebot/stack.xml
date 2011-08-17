@@ -1,0 +1,19 @@
+<stack>
+  <description brief="clearpath_turtlebot">
+    The clearpath_turtlebot stack provides a central repository of software
+    and launch files intended for deployment on the Turtlebot.
+
+    With a Kinect, try exploring, following people or following another turtlebot:
+
+      roslaunch turtlebot_kinect explore.launch
+      roslaunch turtlebot_kinect track_person.launch
+      roslaunch turtlebot_train  train.launch
+
+  </description>
+  <author>Maintained by Mike Purvis</author>
+  <license></license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/clearpath_turtlebot</url>
+  <depend stack="ros" />
+
+</stack>

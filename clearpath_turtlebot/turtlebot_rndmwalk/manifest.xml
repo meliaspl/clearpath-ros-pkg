@@ -1,0 +1,18 @@
+<package>
+  <description brief="turtlebot_rndmwalk">
+
+     turtlebot_rndmwalk
+
+  </description>
+  <author>Sean Anderson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/turtlebot_rndmwalk</url>
+
+  <depend package="clearpath_tools" />
+  <depend package="clearpath_kinect_demo" />
+  <depend package="turtlebot_node" />
+
+</package>
+
+
