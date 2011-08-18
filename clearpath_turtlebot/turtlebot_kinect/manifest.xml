@@ -1,10 +1,10 @@
 <package>
   <description brief="turtlebot_kinect">
 
-     turtlebot_kinect
+     This package contains launch files which run some of the demos from the clearpath_kinect stack on the TurtleBot platform.
 
   </description>
-  <author>The Beast</author>
+  <author>Sean Anderson</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/turtlebot_kinect</url>
