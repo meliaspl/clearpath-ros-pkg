@@ -1,7 +1,7 @@
 <package>
   <description brief="turtlebot_rndmwalk">
 
-     turtlebot_rndmwalk
+     A small demo application to get your TurtleBot moving around autonomously. The random behaviour of the robot causes it to switch between driving left, straight and right. After detecting an obstacle, the robot will stop and turn for a random period of time before attempting to continue motion.
 
   </description>
   <author>Sean Anderson</author>
