@@ -30,5 +30,3 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #target_link_libraries(example ${PROJECT_NAME})
 
 rosbuild_add_executable(ClearpathTurtleTrain src/ClearpathTurtleTrain.cpp)
-target_link_libraries(ClearpathTurtleTrain Vector3)
-target_link_libraries(ClearpathTurtleTrain ClearpathDemoTools)
