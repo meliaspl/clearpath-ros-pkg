@@ -1,0 +1,18 @@
+<package>
+  <description brief="turtlebot_rndmwalk">
+
+     A small demo application to get your TurtleBot moving around autonomously. The random behaviour of the robot causes it to switch between driving left, straight and right. After detecting an obstacle, the robot will stop and turn for a random period of time before attempting to continue motion.
+
+  </description>
+  <author>Sean Anderson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/turtlebot_rndmwalk</url>
+
+  <depend package="clearpath_tools" />
+  <depend package="clearpath_kinect_demo" />
+  <depend package="turtlebot_node" />
+
+</package>
+
+
