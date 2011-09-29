@@ -1,0 +1,9 @@
+<stack>
+  <description brief="clearpath_kingfisher">clearpath_kingfisher</description>
+  <author>Maintained by Mike Purvis</author>
+  <license></license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/clearpath_kingfisher</url>
+  <depend stack="ros" />
+
+</stack>
