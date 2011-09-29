@@ -1,0 +1,12 @@
+<launch>
+  <node pkg="clearpath_base" type="raw.py" name="clearpath_base">
+    <!-- Uncomment the following line to manually specify serial device, rather
+         than autodetecting between available /dev/ttyUSB and /dev/ttyS devices.
+    -->
+    <!-- <param name="port" value="/dev/ttyS0" /> -->
+
+    <param name="data/system_status" value="10" />
+    <param name="data/differential_output" value="10" />
+    <param name="data/power_status" value="1" />
+  </node>
+</launch>
