@@ -1,0 +1,18 @@
+<package>
+  <description brief="turtlebot_kinect">
+
+     This package contains launch files which run some of the demos from the clearpath_kinect stack on the TurtleBot platform.
+
+  </description>
+  <author>Sean Anderson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/turtlebot_kinect</url>
+
+  <depend package="openni_camera" />
+  <depend package="clearpath_tools" />
+  <depend package="clearpath_kinect_demo" />
+
+</package>
+
+
