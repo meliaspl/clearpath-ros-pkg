@@ -9,6 +9,9 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/chameleon_firmware</url>
 
+  <depend package="chameleon_avr_bridge" />
+  <rosdep name="gcc-avr" />
+  <rosdep name="avr-libc" />
 </package>
 
 
