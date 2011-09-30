@@ -9,6 +9,10 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/chameleon_teleop</url>
 
+  <depends pkg="chameleon_avr_bridge" />
+  <depends pkg="sensor_msgs" />
+  <depends pkg="joy" />
+  <depends pkg="rospy" />
 </package>
 
 

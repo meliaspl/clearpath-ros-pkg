@@ -1,16 +1,16 @@
 #!/usr/bin/python
 
-import roslib; roslib.load_manifest('clearpath_teleop')
+import roslib; roslib.load_manifest('chameleon_teleop')
 import rospy
 
-from joy.msg import Joy
+from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 
 
 class Teleop:
     def __init__(self):
-        rospy.init_node('clearpath_teleop')
+        rospy.init_node('chameleon_teleop')
 
         self.turn_scale = rospy.get_param('~turn_scale')
         self.drive_scale = rospy.get_param('~drive_scale')
