@@ -7,7 +7,7 @@
 #  the avr to indirectly publish the ros message types 
 #
 
-import roslib; roslib.load_manifest('chameleon_avr_bridge')
+import roslib; roslib.load_manifest('avr_bridge')
 import avr_bridge
 import rospy
 import sys
