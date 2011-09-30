@@ -10,5 +10,5 @@
   </node>
 
 
-  <node pkg="chameleon_avr_bridge" type="bridge_node.py" name="chameleon_bridge" args="$(find chameleon_firmware)/config.yaml" />
+  <node pkg="avr_bridge" type="bridge_node.py" name="chameleon_bridge" args="$(find chameleon_firmware)/config.yaml" />
 </launch>

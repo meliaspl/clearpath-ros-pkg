@@ -8,8 +8,6 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/chameleon_teleop</url>
-  <depend package="joy"/>
-  <depend package="rospy"/>
 
 </package>
 

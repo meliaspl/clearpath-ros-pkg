@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import roslib; roslib.load_manifest('chameleon_teleop')
+import roslib; roslib.load_manifest('clearpath_teleop')
 import rospy
 
 from joy.msg import Joy
