@@ -1,0 +1,16 @@
+<package>
+  <description brief="chameleon_firmware">
+
+     chameleon_firmware
+
+  </description>
+  <author>Mike Purvis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/chameleon_firmware</url>
+  <depend package="rosserial_arduino"/>
+  <depend package="std_msgs"/>
+  <depend package="chameleon_msgs"/>
+</package>
+
+

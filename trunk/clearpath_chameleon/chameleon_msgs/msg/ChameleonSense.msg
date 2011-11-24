@@ -12,3 +12,6 @@ float32 pwm_right
 
 # Battery (V)
 float32 voltage
+
+# Ultrasonic sensors (cm)
+uint16[] ranges
