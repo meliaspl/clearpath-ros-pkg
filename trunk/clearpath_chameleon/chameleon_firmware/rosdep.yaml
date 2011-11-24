@@ -1,4 +1,0 @@
-gcc-avr:
-  ubuntu: gcc-avr
-avr-libc:
-  ubuntu: avr-libc
