@@ -9,6 +9,5 @@
     <param name="drive_scale" value="0.45" />
   </node>
 
-
-  <node pkg="chameleon_avr_bridge" type="bridge_node.py" name="chameleon_bridge" args="$(find chameleon_firmware)/config.yaml" />
+  <include file="$(find chameleon_firmware)/minimal.launch" />
 </launch>
