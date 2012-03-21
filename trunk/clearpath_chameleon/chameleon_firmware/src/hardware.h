@@ -10,6 +10,10 @@
 #define PIN_ENCA_RIGHT 11
 #define PIN_ENCB_RIGHT 12
 
+#define PIN_DIO1 2
+#define PIN_DIO2 3
+#define PIN_DIO3 8
+
 #define PIN_HEARTBEAT 13
 
 #define PIN_VSENSE 0
@@ -49,5 +53,12 @@
 #define SRF02_ADDR       (uint8_t)0x71
 #define SRF02_CMD        (uint8_t)0x00
 #define SRF02_RANGE_CM   (uint8_t)0x51
+
+#define MUX_ADC_COUNT    0
+#define MUX_PIN0         PIN_DIO3
+#define MUX_PIN1         PIN_DIO2
+#define MUX_PIN2         PIN_DIO1
+
+#define RANGE_COUNT (SRF02_COUNT + MUX_ADC_COUNT)
 
 #endif

@@ -1,1 +1,2 @@
 SUBSYSTEMS=="usb", ATTRS{product}=="Arduino*", SYMLINK+="arduino arduino_$attr{serial}"
+SUBSYSTEMS=="usb", ATTRS{manufacturer}=="Arduino*", SYMLINK+="arduino arduino_$attr{serial}"
