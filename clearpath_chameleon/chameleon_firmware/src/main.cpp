@@ -61,7 +61,7 @@ FixedIncr motor_pwm[2] = { FixedIncr(MOTOR_SLEW, motor_max, -motor_max),
 Fixed f0(int(0));
 
 
-uint16_t ranges[SRF02_COUNT];
+uint16_t ranges[RANGE_COUNT];
 uint8_t current_range = 0;
 
 
@@ -155,6 +155,11 @@ void setup() {
   pinMode(PIN_DIR_RIGHT, OUTPUT);
 
   pinMode(PIN_HEARTBEAT, OUTPUT);
+
+  pinMode(PIN_DIO1, OUTPUT);
+  pinMode(PIN_DIO2, OUTPUT);
+  pinMode(PIN_DIO3, OUTPUT);
+  pinMode(A1, INPUT);
   
   // Enable pin change interrupts for left encoder (port 2)
   // and right encoder (port 1).
@@ -248,10 +253,20 @@ void loop() {
     }
     #endif
 
+
     // Send ROS sensor msg, update HMI LEDs (every nth control period).
     static uint8_t sense_count = 0;
     sense_count++;
     if (sense_count >= (SENSE_PERIOD_MS / CONTROL_PERIOD_MS)) {
+      #if(MUX_ADC_COUNT > 0)
+      for (current_range = 0; current_range < MUX_ADC_COUNT; current_range++) {
+        digitalWrite(MUX_PIN0, (current_range & 0x1));
+        digitalWrite(MUX_PIN1, (current_range & 0x3) >> 1);
+        digitalWrite(MUX_PIN2, (current_range & 0x7) >> 2);
+        ranges[current_range] = analogRead(A1);
+      }  
+      #endif
+
       sense_count = 0;
       sense_msg.travel_left = METERS_PER_TICK * encoders[LEFT].ticks;
       sense_msg.travel_right = METERS_PER_TICK * encoders[RIGHT].ticks;
@@ -261,7 +276,7 @@ void loop() {
       sense_msg.pwm_right = float(motor_pwm[RIGHT].actual);
       sense_msg.voltage = analogRead(PIN_VSENSE) * VSENSE_SCALE + VSENSE_OFFSET;
  
-      sense_msg.ranges_length = SRF02_COUNT; 
+      sense_msg.ranges_length = RANGE_COUNT; 
       sense_msg.ranges = ranges;
 
       sense_pub.publish(&sense_msg);
