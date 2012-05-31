@@ -1,0 +1,23 @@
+<package>
+  <description brief="clearpath_kinect_demo">
+
+     The clearpath_kinect_demo package provides a set of basic demos that can be used with almost any robot and a Kinect. Launch files can be found in clearpath_husky and clearpath_turtlebot with robot specific parameters.
+
+  </description>
+  <author>Sean Anderson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/clearpath_kinect_demo</url>
+
+  <depend package="roscpp"/>
+  <depend package="pcl_ros"/>
+
+  <depend package="clearpath_tools"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/src" lflags="-L${prefix}/lib -Wl,-rpath,${prefix}/lib -lClearpathDemoTools"/>
+  </export>
+
+</package>
+
+
