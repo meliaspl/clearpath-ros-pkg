@@ -1,0 +1,18 @@
+<package>
+  <description brief="turtle_train">
+
+     A small demo application to get your group of TurtleBots moving around autonomously. The TurtleBot will attempt to identify another TurtleBot in its view and begin to follow it. Running this on multiple TurtleBots with a teleop'd bot at the front can make for a fun demo!
+
+  </description>
+  <author>Sean Anderson</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/turtle_train</url>
+
+  <depend package="clearpath_tools" />
+  <depend package="clearpath_kinect_demo" />
+  <depend package="turtlebot_node" />
+
+</package>
+
+
