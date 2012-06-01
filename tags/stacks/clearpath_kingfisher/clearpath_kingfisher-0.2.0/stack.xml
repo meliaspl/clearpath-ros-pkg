@@ -1,0 +1,14 @@
+<stack>
+  <description brief="clearpath_kingfisher">
+    The clearpath_kingfisher stack provides a central repository of software
+    and launch files intended for deployment on the Clearpath Robotics
+    Kingfisher M100 unmanned surface vessel.
+  </description>
+  <author>Maintained by Mike Purvis</author>
+  <license>BSD,</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/clearpath_kingfisher</url>
+  <depend stack="clearpath_common" /> <!-- clearpath_bringup, clearpath_teleop -->
+  <depend stack="ros" />
+
+</stack>

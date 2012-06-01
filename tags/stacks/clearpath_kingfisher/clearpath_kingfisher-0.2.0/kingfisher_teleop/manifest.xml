@@ -1,0 +1,15 @@
+<package>
+  <description brief="kingfisher_teleop">
+    This package contains launch files which enable simple 
+    teleoperation of the Clearpath Robotics Kingfisher.
+  </description>
+  <author>Mike Purvis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kingfisher_teleop</url>
+
+  <depend package="kingfisher_bringup"/>
+  <depend package="clearpath_teleop"/>
+</package>
+
+
