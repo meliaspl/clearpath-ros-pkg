@@ -1,0 +1,14 @@
+<package>
+  <description brief="kingfisher_bringup">
+    This package provides launch files which bring up the Kingfisher
+    base platform and sensors in recommended configurations.
+  </description>
+  <author>Mike Purvis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kingfisher_bringup</url>
+  <depend package="clearpath_bringup" />
+  <depends pkg="clearpath_base" />
+</package>
+
+
