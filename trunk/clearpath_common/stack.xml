@@ -7,6 +7,7 @@
   <license>BSD</license>  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/clearpath_common</url>
+  <rosdep name="pkg-config" />
   <depend stack="common_msgs" /> <!-- geometry_msgs -->
   <depend stack="joystick_drivers" /> <!-- joy -->
   <depend stack="ros" />
