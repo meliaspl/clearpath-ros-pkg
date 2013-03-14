@@ -1,7 +1,7 @@
 
 
 
-#include <WProgram.h>
+#include <Arduino.h>
 #include "I2C/I2C.h"
 
 // ROS

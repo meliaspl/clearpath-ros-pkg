@@ -2,7 +2,7 @@
 #define PID_H
 
 #include "fixed.h"
-#include "WProgram.h"
+#include "Arduino.h"
 
 
 class FixedPIDConstants {
